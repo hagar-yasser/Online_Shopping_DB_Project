@@ -24,7 +24,7 @@ create table Customer(
 username varchar(50) FOREIGN KEY references Users(username)
 ON DELETE CASCADE ON UPDATE CASCADE,
 points int  default 0,
-PRIMARY KEY(username,points)
+PRIMARY KEY(username)
 );
 
 create table Admins(
@@ -40,7 +40,7 @@ activated bit default 0,
 company_name varchar(50) not null,
 bank_acc_no varchar(50) not null,
 admin_username varchar(50) FOREIGN KEY references Admins(username)
-ON DELETE set null ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY(username)
 );
 
@@ -61,7 +61,7 @@ id int not null,
 time_duration int not null, 
 fees int not null,
 username varchar(50) FOREIGN KEY references Admins(username)
-ON DELETE set null ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY (id)
 );
 create table Orders
@@ -76,11 +76,11 @@ order_status varchar(50) not null default 'not processed',
 remaining_days int not null ,
 time_limit int not null,
 customer_name varchar(50) FOREIGN KEY references Customer (username)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 delivery_id int FOREIGN KEY references Delivery(id) 
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 creditCard_number int FOREIGN KEY references Credit_Card(number) 
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY (order_no)
 );
 create table Product(
@@ -93,19 +93,19 @@ color varchar(50) ,
 available bit default 0,
 rate int default 0, 
 vendor_username varchar(50) FOREIGN KEY references Vendor(username) 
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 customer_username  varchar(50) FOREIGN KEY references Customer(username)
-ON DELETE set null ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 customer_order_id int FOREIGN KEY references Orders(order_no)
-ON DELETE set null ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY (serial_no)
 );
 create table CustomerAddstoCartProduct
 (
 serial_no int FOREIGN KEY references product(serial_no) 
-ON DELETE CASCADE ON UPDATE CASCADE,  
+ON DELETE NO ACTION ON UPDATE NO ACTION,  
 customer_name varchar(50) FOREIGN KEY references Customer(username)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY (serial_no,customer_name)
 );
 
@@ -115,16 +115,16 @@ deal_id int not null,
 deal_amount int default 0, 
 expiry_date datetime not null, 
 admin_username varchar(50) FOREIGN KEY references Admins(username)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY(deal_id)
 );
 
 create table Todays_Deals_Product
 (
 deal_id int FOREIGN KEY references Todays_Deals(deal_id) 
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 serial_no int FOREIGN KEY references product(serial_no) 
-ON DELETE CASCADE ON UPDATE CASCADE, 
+ON DELETE NO ACTION ON UPDATE NO ACTION, 
 issue_date datetime ,
 PRIMARY KEY(deal_id,serial_no)
 );
@@ -137,17 +137,17 @@ expiry_date datetime
 create table offersOnProduct
 (
 offer_id int FOREIGN KEY references offer (offer_id)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 serial_no int FOREIGN KEY references Product (serial_no)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY (offer_id,serial_no)
 );
 create table Customer_Question_Product
 (
 serial_no int FOREIGN KEY references Product (serial_no)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 customer_name varchar(50) FOREIGN KEY references Customer(username)
-ON DELETE CASCADE ON UPDATE CASCADE, 
+ON DELETE NO ACTION ON UPDATE NO ACTION, 
 question varchar (50) not null,
 answer varchar(50),
 PRIMARY KEY(serial_no,customer_name)
@@ -155,7 +155,7 @@ PRIMARY KEY(serial_no,customer_name)
 create table Wishlist
 (
 username varchar(50) FOREIGN KEY references Customer(username)
-ON DELETE CASCADE ON UPDATE CASCADE,  
+ON DELETE NO ACTION ON UPDATE NO ACTION,  
 name varchar(50) not null,
 PRIMARY KEY (username ,name)
 );
@@ -165,43 +165,48 @@ code int PRIMARY KEY,
 expiry_date datetime, 
 amount int default 0,
 username varchar(50) FOREIGN KEY references Admins(username)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 );
+ALTER TABLE Orders
+ADD GiftCardCodeUsed int FOREIGN KEY references Giftcard(code)
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 create table Wishlist_Product
 (
 username varchar(50) FOREIGN KEY references Wishlist(username)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 wish_name varchar(50) FOREIGN KEY references Wishlist(name)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 serial_no int FOREIGN KEY references Product (serial_no)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY( username,wish_name,serial_no)
 );
 create table Admin_Customer_Giftcard
 (
 code int FOREIGN KEY references Giftcard(code),
 customer_name varchar(50)FOREIGN KEY references Customer(username)
-ON DELETE CASCADE ON UPDATE CASCADE,  
+ON DELETE NO ACTION ON UPDATE NO ACTION,  
 admin_username varchar(50) FOREIGN KEY references Admins(username)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
+remainingPoints int default 0,
 PRIMARY KEY (code, customer_name,admin_username)
 );
 
 
 create table Admin_Delivery_Order(
 delivery_username varchar (50) FOREIGN KEY references Delivery_Person(username)
-ON DELETE CASCADE ON UPDATE CASCADE, 
+ON DELETE NO ACTION ON UPDATE NO ACTION, 
 order_no INT FOREIGN KEY references orders(order_no)
-ON DELETE CASCADE ON UPDATE CASCADE, 
+ON DELETE NO ACTION ON UPDATE NO ACTION, 
 admin_username varchar(50) FOREIGN KEY references Admins(username)
-ON DELETE CASCADE ON UPDATE CASCADE,
+ON DELETE NO ACTION ON UPDATE NO ACTION,
 delivery_window int 
 PRIMARY KEY (delivery_username,order_no)
 );
 create table Customer_CreditCard(
 customer_name varchar(50)FOREIGN KEY references Customer(username)
-ON DELETE CASCADE ON UPDATE CASCADE,  
+ON DELETE NO ACTION ON UPDATE NO ACTION,  
 cc_number int FOREIGN KEY references Credit_Card (number)
-ON DELETE CASCADE ON UPDATE CASCADE,  
+ON DELETE NO ACTION ON UPDATE NO ACTION,  
 PRIMARY KEY (customer_name, cc_number)
 );
