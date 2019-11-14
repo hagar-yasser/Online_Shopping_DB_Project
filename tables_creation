@@ -209,3 +209,70 @@ cc_number varchar(10) FOREIGN KEY references Credit_Card (number)
 ON DELETE NO ACTION ON UPDATE NO ACTION,  
 PRIMARY KEY (customer_name, cc_number)
 );
+go
+
+create proc showProducts
+as
+select*
+from products
+go
+create proc showProductsbyPrice
+as
+select*
+from products
+order by final_price
+go
+create proc searchbyname
+@text varchar(20)
+as
+select*
+from products
+where product_name=text
+
+go
+create proc addQuestion
+@serial int ,
+@customer varchar(20),
+@question varchar(50)
+as 
+insert into customer_question_product(serial_no,customer_name,question)
+values (@serial,@customer,@question)
+go
+create proc addToCart
+@customername varchar(20),
+@serial int 
+as 
+insert into customerAddstoCartProduct
+(@serial,@customername)
+
+
+go
+create proc removefromCart
+@customername varchar(20),
+@serial int
+as
+delete from customerAddstoCartProduct
+where serial_no=@serial and customer_name=@customername
+go
+create proc createWishlist
+@customername varchar(20),
+@name varchar(20)
+as 
+insert into wishlist
+values(@customername,@name)
+
+create proc addtoWishlist
+@customername varchar(20),
+@wishlistname varchar(20),
+@serial int
+as 
+insert into wishlist_product
+values(@customername,@wishlistname,@serial)
+go
+create proc removefromWishlist
+@customername varchar(20),
+@wishlistname varchar(20),
+@serial int
+as 
+delete from wishlist_product
+where username=@customername and wish_name =@wishlistname and serial_no=@serial
