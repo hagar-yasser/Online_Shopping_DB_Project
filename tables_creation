@@ -1,57 +1,57 @@
 create database projectM2;
 create table Users(
-username varchar(50) PRIMARY KEY ,
-password varchar(50) not null ,
-first_name varchar(50) not null,
-last_name varchar(50) not null,
+username varchar(20) PRIMARY KEY ,
+password varchar(20) not null ,
+first_name varchar(20) not null,
+last_name varchar(20) not null,
 email varchar(50) not null
 );
 create table User_mobile_numbers(
-mobile_number  varchar(15) not null,
-username varchar(50) FOREIGN KEY references Users(username)
+mobile_number  varchar(20) not null,
+username varchar(20) FOREIGN KEY references Users(username)
 ON DELETE CASCADE ON UPDATE CASCADE,
 PRIMARY KEY(mobile_number,username)
 );
 create table User_Addresses
 (
-address varchar(50) not null,
+address varchar(100) not null,
 username varchar(50) FOREIGN KEY references Users(username)
 ON DELETE CASCADE ON UPDATE CASCADE,
 PRIMARY KEY(address,username)
 );
 
 create table Customer(
-username varchar(50) FOREIGN KEY references Users(username)
+username varchar(20) FOREIGN KEY references Users(username)
 ON DELETE CASCADE ON UPDATE CASCADE,
 points int  default 0,
 PRIMARY KEY(username)
 );
 
 create table Admins(
-username varchar(50) FOREIGN KEY references Users(username)
+username varchar(20) FOREIGN KEY references Users(username)
 ON DELETE CASCADE ON UPDATE CASCADE,
 PRIMARY KEY(username)
 );
 
 create table Vendor(
-username varchar(50) FOREIGN KEY references Users(username)
+username varchar(20) FOREIGN KEY references Users(username)
 ON DELETE CASCADE ON UPDATE CASCADE,
 activated bit default 0,
-company_name varchar(50) not null,
-bank_acc_no varchar(50) not null,
-admin_username varchar(50) FOREIGN KEY references Admins(username)
+company_name varchar(20) not null,
+bank_acc_no varchar(20) not null,
+admin_username varchar(20) FOREIGN KEY references Admins(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY(username)
 );
 
 create table Delivery_Person(
-username varchar(50) FOREIGN KEY references Users(username)
+username varchar(20) FOREIGN KEY references Users(username)
 ON DELETE CASCADE ON UPDATE CASCADE,
 is_activated bit default 0,
 PRIMARY KEY(username)
 );
 create table Credit_Card(
-number int not null,
+number varchar(10) not null,
 expiry_date datetime not null,
 cvv_code int not null,
 PRIMARY KEY (number)
@@ -59,8 +59,8 @@ PRIMARY KEY (number)
 create table Delivery(
 id int not null,
 time_duration int not null, 
-fees int not null,
-username varchar(50) FOREIGN KEY references Admins(username)
+fees decimal(5,3) not null,
+username varchar(20) FOREIGN KEY references Admins(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY (id)
 );
@@ -68,33 +68,33 @@ create table Orders
 (
 order_no int primary key,
 order_date datetime not null,
-total_amount int default 0, 
-cash_amount int default 0,
-credit_amount int default 0, 
+total_amount decimal(10,2) , 
+cash_amount decimal(10,2),
+credit_amount decimal(10,2), 
 payment_type varchar(50) not null,
 order_status varchar(50) not null default 'not processed',
 remaining_days int not null ,
 time_limit int not null,
-customer_name varchar(50) FOREIGN KEY references Customer (username)
+customer_name varchar(20) FOREIGN KEY references Customer (username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
 delivery_id int FOREIGN KEY references Delivery(id) 
 ON DELETE NO ACTION ON UPDATE NO ACTION,
-creditCard_number int FOREIGN KEY references Credit_Card(number) 
+creditCard_number varchar(20) FOREIGN KEY references Credit_Card(number) 
 ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY (order_no)
 );
 create table Product(
 serial_no int not null,
-product_name varchar(50) not null,
-category varchar(50) not null,
+product_name varchar(20) not null,
+category varchar(20) not null,
 product_description varchar(100) not null,
-final_price int not null,
-color varchar(50) ,
+final_price decimal(10,2) not null,
+color varchar(20) ,
 available bit default 0,
 rate int default 0, 
-vendor_username varchar(50) FOREIGN KEY references Vendor(username) 
+vendor_username varchar(20) FOREIGN KEY references Vendor(username) 
 ON DELETE NO ACTION ON UPDATE NO ACTION,
-customer_username  varchar(50) FOREIGN KEY references Customer(username)
+customer_username  varchar(20) FOREIGN KEY references Customer(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
 customer_order_id int FOREIGN KEY references Orders(order_no)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -104,7 +104,7 @@ create table CustomerAddstoCartProduct
 (
 serial_no int FOREIGN KEY references product(serial_no) 
 ON DELETE NO ACTION ON UPDATE NO ACTION,  
-customer_name varchar(50) FOREIGN KEY references Customer(username)
+customer_name varchar(20) FOREIGN KEY references Customer(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
 PRIMARY KEY (serial_no,customer_name)
 );
@@ -130,7 +130,7 @@ PRIMARY KEY(deal_id,serial_no)
 );
 create table offer
 (
-offer_id int PRIMARY KEY,
+offer_id int PRIMARY KEY identity,
 offer_amount int ,
 expiry_date datetime
 );
@@ -146,7 +146,7 @@ create table Customer_Question_Product
 (
 serial_no int FOREIGN KEY references Product (serial_no)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
-customer_name varchar(50) FOREIGN KEY references Customer(username)
+customer_name varchar(20) FOREIGN KEY references Customer(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION, 
 question varchar (50) not null,
 answer varchar(50),
@@ -154,28 +154,28 @@ PRIMARY KEY(serial_no,customer_name)
 );
 create table Wishlist
 (
-username varchar(50) FOREIGN KEY references Customer(username)
+username varchar(20) FOREIGN KEY references Customer(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,  
-name varchar(50) not null,
+name varchar(20) not null,
 PRIMARY KEY (username ,name)
 );
 create table Giftcard
 (
-code int PRIMARY KEY, 
+code varchar(10) PRIMARY KEY, 
 expiry_date datetime, 
 amount int default 0,
-username varchar(50) FOREIGN KEY references Admins(username)
+username varchar(20) FOREIGN KEY references Admins(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
 );
 ALTER TABLE Orders
-ADD GiftCardCodeUsed int FOREIGN KEY references Giftcard(code)
+ADD GiftCardCodeUsed varchar(10) FOREIGN KEY references Giftcard(code)
 ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 create table Wishlist_Product
 (
-username varchar(50) FOREIGN KEY references Wishlist(username)
+username varchar(20) FOREIGN KEY references Wishlist(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
-wish_name varchar(50) FOREIGN KEY references Wishlist(name)
+wish_name varchar(20) FOREIGN KEY references Wishlist(name)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
 serial_no int FOREIGN KEY references Product (serial_no)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
@@ -183,10 +183,10 @@ PRIMARY KEY( username,wish_name,serial_no)
 );
 create table Admin_Customer_Giftcard
 (
-code int FOREIGN KEY references Giftcard(code),
-customer_name varchar(50)FOREIGN KEY references Customer(username)
+code  varchar(10) FOREIGN KEY references Giftcard(code),
+customer_name varchar(20)FOREIGN KEY references Customer(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,  
-admin_username varchar(50) FOREIGN KEY references Admins(username)
+admin_username varchar(20) FOREIGN KEY references Admins(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
 remainingPoints int default 0,
 PRIMARY KEY (code, customer_name,admin_username)
@@ -194,19 +194,19 @@ PRIMARY KEY (code, customer_name,admin_username)
 
 
 create table Admin_Delivery_Order(
-delivery_username varchar (50) FOREIGN KEY references Delivery_Person(username)
+delivery_username varchar (20) FOREIGN KEY references Delivery_Person(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION, 
 order_no INT FOREIGN KEY references orders(order_no)
 ON DELETE NO ACTION ON UPDATE NO ACTION, 
-admin_username varchar(50) FOREIGN KEY references Admins(username)
+admin_username varchar(20) FOREIGN KEY references Admins(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
-delivery_window int 
+delivery_window varchar(50), 
 PRIMARY KEY (delivery_username,order_no)
 );
 create table Customer_CreditCard(
-customer_name varchar(50)FOREIGN KEY references Customer(username)
+customer_name varchar(20)FOREIGN KEY references Customer(username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,  
-cc_number int FOREIGN KEY references Credit_Card (number)
+cc_number varchar(10) FOREIGN KEY references Credit_Card (number)
 ON DELETE NO ACTION ON UPDATE NO ACTION,  
 PRIMARY KEY (customer_name, cc_number)
 );
