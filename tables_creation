@@ -92,7 +92,7 @@ product_description text not null,
 price decimal(10,2) not null,
 final_price decimal(10,2) not null,
 color varchar(20) ,
-available bit default 0,
+available bit default 1,
 rate int default 0, 
 vendor_username varchar(20) FOREIGN KEY references Vendor(username) 
 ON DELETE NO ACTION ON UPDATE NO ACTION,
