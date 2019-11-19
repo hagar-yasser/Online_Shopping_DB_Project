@@ -50,9 +50,9 @@ is_activated bit default 0,
 PRIMARY KEY(username)
 );
 create table Credit_Card(
-number varchar(10) not null,
+number varchar(20) not null,
 expiry_date datetime not null,
-cvv_code int not null,
+cvv_code varchar(4) not null,
 PRIMARY KEY (number)
 );
 create table Delivery(
@@ -88,7 +88,7 @@ create table Product(
 serial_no int not null,
 product_name varchar(20) not null,
 category varchar(20) not null,
-product_description varchar(100) not null,
+product_description text not null,
 price decimal(10,2) not null,
 final_price decimal(10,2) not null,
 color varchar(20) ,
