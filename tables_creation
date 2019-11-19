@@ -57,6 +57,7 @@ PRIMARY KEY (number)
 );
 create table Delivery(
 id int not null,
+type varchar(20) not null,
 time_duration int not null, 
 fees decimal(5,3) not null,
 username varchar(20) FOREIGN KEY references Admins(username)
@@ -74,6 +75,7 @@ payment_type varchar(50) not null,
 order_status varchar(50) not null default 'not processed',
 remaining_days int not null ,
 time_limit int not null,
+
 customer_name varchar(20) FOREIGN KEY references Customer (username)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
 delivery_id int FOREIGN KEY references Delivery(id) 
@@ -125,7 +127,7 @@ deal_id int FOREIGN KEY references Todays_Deals(deal_id)
 ON DELETE NO ACTION ON UPDATE NO ACTION,
 serial_no int FOREIGN KEY references product(serial_no) 
 ON DELETE NO ACTION ON UPDATE NO ACTION, 
-issue_date datetime ,
+
 PRIMARY KEY(deal_id,serial_no)
 );
 create table offer
