@@ -66,7 +66,7 @@ PRIMARY KEY (id)
 );
 create table Orders
 (
-order_no int primary key,
+order_no int primary key identity,
 order_date datetime not null,
 total_amount decimal(10,2) , 
 cash_amount decimal(10,2),
@@ -85,7 +85,7 @@ ON DELETE NO ACTION ON UPDATE NO ACTION,
 
 );
 create table Product(
-serial_no int not null,
+serial_no int identity,
 product_name varchar(20) not null,
 category varchar(20) not null,
 product_description text not null,
