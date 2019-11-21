@@ -239,7 +239,7 @@ create proc addQuestion
 @question varchar(50)
 as 
 insert into customer_question_product(serial_no,customer_name,question)
-values (@serial,@customer,@question)
+values (select serial_no from productwhere serial_no=@serial,select username from customer where username=@customer,@question)
 
 go
 create proc addToCart
@@ -247,7 +247,7 @@ create proc addToCart
 @serial int 
 as 
 insert into customerAddstoCartProduct
-values (@serial,@customername)
+values (select serial_no from productwhere serial_no=@serial,select username from customer where username=@customername)
 
 go
 create proc removefromCart
@@ -262,7 +262,7 @@ create proc createWishlist
 @name varchar(20)
 as 
 insert into wishlist
-values(@customername,@name)
+values(select username from customer where username=@customername,@name)
 go
 create proc addtoWishlist
 @customername varchar(20),
@@ -270,7 +270,7 @@ create proc addtoWishlist
 @serial int
 as 
 insert into wishlist_product
-values(@customername,@wishlistname,@serial)
+values(select username from customer where username=@customername,select name from wishlist where name= @wishlistname,select serial_no from productwhere serial_no=@serial)
 go
 create proc removefromWishlist
 @customername varchar(20),
